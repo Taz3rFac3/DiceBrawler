@@ -14,16 +14,47 @@ pygame.display.set_caption("Dice Brawler")
 clock = pygame.time.Clock()
 FPS = 60
 
+#define colors
+YELLOW = (255, 255, 0)
+RED = (255, 0, 0)
+WHITE = (255, 255, 255)
+BLUE = (0, 0, 255)
+
+#define fighter variables
+FIRE_WIZARD_SIZE = 153
+FIRE_SCALE = 1.5
+FIRE_OFFSET = [72, 12]
+FIRE_DATA = [FIRE_WIZARD_SIZE, FIRE_SCALE, FIRE_OFFSET]
+ICE_WIZARD_SIZE = 153
+ICE_SCALE = 1.5
+ICE_OFFSET = [25, 12]
+ICE_DATA = [ICE_WIZARD_SIZE, ICE_SCALE, ICE_OFFSET]
+
 #load background image
 bg_image = pygame.image.load("assets/images/background/background.jpg")
+
+#load character images
+fire_wizard_sheet = pygame.image.load('assets/images/wizard_fire/fire_wizard_sprite.png').convert_alpha()
+ice_wizard_sheet = pygame.image.load('assets/images/wizard_ice/ice_wizard_sprite.png').convert_alpha()
+
+#define number of steps in each animation
+FIRE_WIZARD_STEPS = [1, 3, 4, 1, 4]
+ICE_WIZARD_STEPS = [1, 3, 4, 1, 4]
 
 def draw_bg():
     scaled_bg = pygame.transform.scale(bg_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
     screen.blit(scaled_bg, (0,0))
 
+#function for drawing healthbars
+def draw_health_bar(health, x, y):
+    ratio = health / 100
+    pygame.draw.rect(screen, BLUE, (x - 2, y - 2, 404, 34))
+    pygame.draw.rect(screen, RED, (x, y, 400, 30))
+    pygame.draw.rect(screen, BLUE, (x, y, 400 * ratio, 30))
+
 #create two instance of fighters
-fighter_1 = Fighter(100, 350)
-fighter_2 = Fighter(800, 350)
+fighter_1 = Fighter(100, 350, False, FIRE_DATA, fire_wizard_sheet, FIRE_WIZARD_STEPS)
+fighter_2 = Fighter(800, 350, True, ICE_DATA, ice_wizard_sheet, ICE_WIZARD_STEPS)
 
 #game loop
 run = True
@@ -35,9 +66,17 @@ while run:
     #draw background
     draw_bg()
 
+    #show player health bars
+    draw_health_bar(fighter_1.health, 20, 20)
+    draw_health_bar(fighter_2.health, 580, 20)
+
     #move fighters
     fighter_1.move(SCREEN_WIDTH, SCREEN_HEIGHT, screen, fighter_2)
     #fighter_2.move()
+
+    #update fighters
+    fighter_1.update()
+    fighter_2.update()
 
     #draw fighters
     fighter_1.draw(screen)
