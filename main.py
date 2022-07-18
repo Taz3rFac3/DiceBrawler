@@ -23,11 +23,11 @@ BLUE = (0, 0, 255)
 #define fighter variables
 FIRE_WIZARD_SIZE = 153
 FIRE_SCALE = 1.5
-FIRE_OFFSET = [72, 12]
+FIRE_OFFSET = [72, 3]
 FIRE_DATA = [FIRE_WIZARD_SIZE, FIRE_SCALE, FIRE_OFFSET]
 ICE_WIZARD_SIZE = 153
 ICE_SCALE = 1.5
-ICE_OFFSET = [25, 12]
+ICE_OFFSET = [25, 3]
 ICE_DATA = [ICE_WIZARD_SIZE, ICE_SCALE, ICE_OFFSET]
 
 #load background image
@@ -38,8 +38,8 @@ fire_wizard_sheet = pygame.image.load('assets/images/wizard_fire/fire_wizard_spr
 ice_wizard_sheet = pygame.image.load('assets/images/wizard_ice/ice_wizard_sprite.png').convert_alpha()
 
 #define number of steps in each animation
-FIRE_WIZARD_STEPS = [1, 3, 4, 1, 4]
-ICE_WIZARD_STEPS = [1, 3, 4, 1, 4]
+FIRE_WIZARD_STEPS = [1, 3, 4, 1, 4, 3]
+ICE_WIZARD_STEPS = [1, 3, 4, 1, 4, 3]
 
 def draw_bg():
     scaled_bg = pygame.transform.scale(bg_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -53,8 +53,8 @@ def draw_health_bar(health, x, y):
     pygame.draw.rect(screen, BLUE, (x, y, 400 * ratio, 30))
 
 #create two instance of fighters
-fighter_1 = Fighter(100, 350, False, FIRE_DATA, fire_wizard_sheet, FIRE_WIZARD_STEPS)
-fighter_2 = Fighter(800, 350, True, ICE_DATA, ice_wizard_sheet, ICE_WIZARD_STEPS)
+fighter_1 = Fighter(1, 100, 350, False, FIRE_DATA, fire_wizard_sheet, FIRE_WIZARD_STEPS)
+fighter_2 = Fighter(2, 800, 350, True, ICE_DATA, ice_wizard_sheet, ICE_WIZARD_STEPS)
 
 #game loop
 run = True
@@ -72,7 +72,7 @@ while run:
 
     #move fighters
     fighter_1.move(SCREEN_WIDTH, SCREEN_HEIGHT, screen, fighter_2)
-    #fighter_2.move()
+    fighter_2.move(SCREEN_WIDTH, SCREEN_HEIGHT, screen, fighter_2)
 
     #update fighters
     fighter_1.update()
