@@ -45,6 +45,15 @@ ice_wizard_sheet = pygame.image.load('assets/images/wizard_ice/ice_wizard_sprite
 FIRE_WIZARD_STEPS = [1, 3, 4, 1, 4, 3]
 ICE_WIZARD_STEPS = [1, 3, 4, 1, 4, 3]
 
+#define fonts
+count_font = pygame.font.Font("assets/fonts/Turok.ttf", 80)
+score_font = pygame.font.Font("assets/fonts/Turok.ttf", 30)
+
+#function for drawing text
+def draw_text(text, font, text_col, x, y):
+    img = font.render(text, True, text_col)
+    screen.blit(img, (x, y))
+
 def draw_bg():
     scaled_bg = pygame.transform.scale(bg_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
     screen.blit(scaled_bg, (0,0))
@@ -81,11 +90,10 @@ while run:
         fighter_2.move(SCREEN_WIDTH, SCREEN_HEIGHT, screen, fighter_1)
 
     else:
+        draw_text(str(intro_count), count_font, RED, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 3)
         if (pygame.time.get_ticks() - last_count_update) >= 1000:
             intro_count -= 1
             last_count_update = pygame.time.get_ticks()
-            print(intro_count)
-
 
     #update fighters
     fighter_1.update()
