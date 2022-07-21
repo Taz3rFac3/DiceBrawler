@@ -1,6 +1,8 @@
 import pygame
+from pygame import mixer
 from fighter import Fighter
 
+mixer.init()
 pygame.init()
 
 # create game window
@@ -25,7 +27,7 @@ intro_count = 3
 last_count_update = pygame.time.get_ticks()
 score = [0, 0] #player scores. [P1, P2]
 round_over = False
-ROUND_OVER_COOLDOWN = 200
+ROUND_OVER_COOLDOWN = 2000
 
 #define fighter variables
 FIRE_WIZARD_SIZE = 153
@@ -36,6 +38,17 @@ ICE_WIZARD_SIZE = 153
 ICE_SCALE = 1.5
 ICE_OFFSET = [25, 3]
 ICE_DATA = [ICE_WIZARD_SIZE, ICE_SCALE, ICE_OFFSET]
+
+#load music and sounds
+pygame.mixer.music.load('assets/sounds/fightingmusic.mp3')
+pygame.mixer.music.set_volume(1)
+pygame.mixer.music.play(-1, 0.0, 5000)
+fire_fx = pygame.mixer.Sound('assets/sounds/firespell.wav')
+fire_fx.set_volume(1)
+ice_fx = pygame.mixer.Sound('assets/sounds/icespell.wav')
+ice_fx.set_volume(1)
+hit_fx = pygame.mixer.Sound('assets/sounds/magicdamage.wav')
+hit_fx.set_volume(1)
 
 #load background image
 bg_image = pygame.image.load("assets/images/background/background.jpg")
@@ -72,8 +85,8 @@ def draw_health_bar(health, x, y):
     pygame.draw.rect(screen, BLUE, (x, y, 400 * ratio, 30))
 
 #create two instance of fighters
-fighter_1 = Fighter(1, 100, 350, False, FIRE_DATA, fire_wizard_sheet, FIRE_WIZARD_STEPS)
-fighter_2 = Fighter(2, 800, 350, True, ICE_DATA, ice_wizard_sheet, ICE_WIZARD_STEPS)
+fighter_1 = Fighter(1, 100, 350, False, FIRE_DATA, fire_wizard_sheet, FIRE_WIZARD_STEPS,fire_fx, hit_fx)
+fighter_2 = Fighter(2, 800, 350, True, ICE_DATA, ice_wizard_sheet, ICE_WIZARD_STEPS, ice_fx, hit_fx)
 
 #game loop
 run = True
@@ -88,6 +101,8 @@ while run:
     #show player health bars
     draw_health_bar(fighter_1.health, 20, 20)
     draw_health_bar(fighter_2.health, 580, 20)
+    draw_text("P1:" +str(score[0]), score_font, RED, 20, 60)
+    draw_text("P2:" + str(score[1]), score_font, RED, 580, 60)
 
     #update countdown
     if intro_count <= 0:
@@ -125,8 +140,8 @@ while run:
         if pygame.time.get_ticks() - round_over_time > ROUND_OVER_COOLDOWN:
             round_over = False
             intro_count = 3
-            fighter_1 = Fighter(1, 100, 350, False, FIRE_DATA, fire_wizard_sheet, FIRE_WIZARD_STEPS)
-            fighter_2 = Fighter(2, 800, 350, True, ICE_DATA, ice_wizard_sheet, ICE_WIZARD_STEPS)
+            fighter_1 = Fighter(1, 100, 350, False, FIRE_DATA, fire_wizard_sheet, FIRE_WIZARD_STEPS, fire_fx, hit_fx)
+            fighter_2 = Fighter(2, 800, 350, True, ICE_DATA, ice_wizard_sheet, ICE_WIZARD_STEPS, ice_fx, hit_fx)
 
     #event handler
     for event in pygame.event.get():
